@@ -32,10 +32,10 @@ class Movie(APIView):
 
 class RecommendedMovie(APIView):
     def post(self, request):
-        print(request.data)
+        # print(request.data)
         movie_index = request.data.get('movie_index')
         top_five = sorted(list(enumerate(movies_vector_similarity[movie_index])), reverse=True, key=lambda x: x[1])[1:11]
-        print(top_five)
+        # print(top_five)
         recommended_five = []
         for i in top_five:
             # print(movies_df.iloc[i[0]].title)
