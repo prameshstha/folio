@@ -1,25 +1,20 @@
 import os
 import pickle
 
+import requests
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import numpy as np
 from skstores.settings import BASE_DIR
+from skstores.utils import download_file_from_azure_container
 
 # Create your views here.
-# movie_file = open(os.path.join(settings.BASE_DIR, 'df_movie.pkl'))
-laptop_df = pickle.load(open(f'{BASE_DIR}/laptop_price/files/final_df_laptop_price.pkl', 'rb'))
-pipeline = pickle.load(open(f'{BASE_DIR}/laptop_price/files/final_pipe_gradient_boost.pkl', 'rb'))
 
+download_file_from_azure_container('laptop_price/final_df_laptop_price.pkl', 'laptop_price/files/laptop_price.pkl')
+download_file_from_azure_container('laptop_price/final_pipe_gradient_boost.pkl', 'laptop_price/files/laptop_pipe.pkl')
 
-# for index, row in movies_df.iterrows():
-#     movie_list.append({'movie_index': index, 'id': row.id, 'title': row.title})
-#     count += 1
-#     # if count > 15:
-#     #     break
-# sorted_movie_list = sorted(list(movie_list), key=lambda x: x['title'])
-
-# print(json.dumps(sorted_movie_list))
+laptop_df = pickle.load(open(f'{BASE_DIR}/laptop_price/files/laptop_price.pkl', 'rb'))
+pipeline = pickle.load(open(f'{BASE_DIR}/laptop_price/files/laptop_pipe.pkl', 'rb'))
 
 
 class LaptopFeatures(APIView):
@@ -34,8 +29,10 @@ class LaptopFeatures(APIView):
             # print(list(set(laptop_df[column])))
             column_values.append({'column': col, 'value': list(set(laptop_df[column]))})
             # column_values.append({col: 'a'})
-        #
+        # req_lpt = requests.get(gd_laptop_df)
+        # print(req_lpt.content)
         # print(column_values)
+
         return Response(column_values, 200)
 
 

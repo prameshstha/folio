@@ -2,15 +2,21 @@ import os
 import pickle
 
 import requests
+from django.core.files import File
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import json
 from skstores.settings import BASE_DIR
+from skstores.utils import download_file_from_azure_container
 
 # Create your views here.
-# movie_file = open(os.path.join(settings.BASE_DIR, 'df_movie.pkl'))
+
+download_file_from_azure_container('movie_recommend/df_movie.pkl', 'movie_recommendor/files/df_movie.pkl')
+download_file_from_azure_container('movie_recommend/vector_similarity.pkl', 'movie_recommendor/files/vector_similarity.pkl')
+
 movies_df = pickle.load(open(f'{BASE_DIR}/movie_recommendor/files/df_movie.pkl', 'rb'))
 movies_vector_similarity = pickle.load(open(f'{BASE_DIR}/movie_recommendor/files/vector_similarity.pkl', 'rb'))
+print(File(movies_df))
 
 movies_df.drop(columns=['tags'], inplace=True)
 movie_list = []
